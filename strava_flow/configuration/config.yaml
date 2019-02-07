@@ -1,0 +1,2 @@
+strava_client_id: ${STRAVA_CLIENT_ID}
+strava_client_secret: ${STRAVA_CLIENT_SECRET}
