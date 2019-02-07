@@ -29,13 +29,10 @@ setup(
     author_email='vmarceau@gmail.com',
     packages=find_packages(exclude=['tests*']),
     data_files=[],
-    package_data={
-        'readme': ['README.md'],
-        'strava_flow': ['py.typed']
-    },
+    package_data={'readme': ['README.md'], 'strava_flow': ['py.typed']},
     install_requires=install_requires,
     test_suite='tests',
     tests_require=tests_require,
     include_package_data=True,
-    zip_safe=False
+    zip_safe=False,
 )
