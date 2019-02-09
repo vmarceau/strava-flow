@@ -2,12 +2,12 @@ import os
 import json
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Optional
+from typing import List, Optional
 
 from strava_flow.utils.time import datetime_from_timestamp
 
 
-class StravaCredentials:
+class Credentials:
     def __init__(
         self,
         client_id: str,
@@ -15,7 +15,7 @@ class StravaCredentials:
         access_token: str,
         refresh_token: str,
         token_expiry: float,
-        scope: str,
+        scopes: List[str],
         user_agent: str,
         invalid: bool = False,
     ) -> None:
@@ -25,7 +25,7 @@ class StravaCredentials:
         self.refresh_token = refresh_token
         self.token_expiry = token_expiry
         self.user_agent = user_agent
-        self.scope = scope
+        self.scopes = scopes
         self.invalid = invalid
 
     def invalidate(self) -> None:
@@ -41,7 +41,7 @@ class StravaCredentials:
             return True
 
     @classmethod
-    def from_json(cls, content: str) -> 'StravaCredentials':
+    def from_json(cls, content: str) -> 'Credentials':
         data = json.loads(content)
         return cls(
             client_id=data['client_id'],
@@ -49,7 +49,7 @@ class StravaCredentials:
             access_token=data['access_token'],
             refresh_token=data['refresh_token'],
             token_expiry=data['token_expiry'],
-            scope=data['scope'],
+            scopes=data['scopes'],
             user_agent=data['user_agent'],
             invalid=data['invalid'],
         )
@@ -61,7 +61,7 @@ class StravaCredentials:
             'access_token': self.access_token,
             'refresh_token': self.refresh_token,
             'token_expiry': self.token_expiry,
-            'scope': self.scope,
+            'scope': self.scopes,
             'user_agent': self.user_agent,
             'invalid': self.invalid,
         }
@@ -69,24 +69,58 @@ class StravaCredentials:
 
 
 class CredentialsStorage:
-    def __init__(self, filename: str) -> None:
-        self._filename = filename
+    def __init__(self, filepath: str) -> None:
+        self._filepath = filepath
 
-    def get(self) -> Optional[StravaCredentials]:
+    def get(self) -> Optional[Credentials]:
         credentials = None
-        try:
-            with open(self._filename, 'r') as f:
-                content = f.read()
-            credentials = StravaCredentials.from_json(content)
-        except IOError:
-            pass
+        if os.path.exists(self._filepath):
+            try:
+                with open(self._filepath, 'r') as f:
+                    content = f.read()
+                credentials = Credentials.from_json(content)
+            except Exception:
+                pass
 
         return credentials
 
-    def put(self, credentials: StravaCredentials) -> None:
-        Path(self._filename).touch(exist_ok=True)
-        with open(self._filename, 'w') as f:
+    def put(self, credentials: Credentials) -> None:
+        Path(self._filepath).touch(exist_ok=True)
+        with open(self._filepath, 'w') as f:
             f.write(credentials.to_json())
 
     def delete(self) -> None:
-        os.remove(self._filename)
+        os.remove(self._filepath)
+
+
+class StravaCredentialsService:
+    _SCOPES = ['activities:read']
+    _AUTHORIZE_URI = 'https://www.strava.com/oauth/authorize'
+    _DEAUTHORIZE_URI = 'https://www.strava.com/oauth/deauthorize'
+    _TOKEN_URI = 'https://www.strava.com/oauth/token'
+    _USER_AGENT = 'strava-flow'
+    _CREDENTIALS_FOLDER = '.credentials'
+    _CREDENTIALS_FILENAME = 'strava.com.json'
+
+    def __init__(self, cliend_id: str, client_secret: str) -> None:
+        self._client_id = cliend_id
+        self._client_secret = client_secret
+        self._storage = self._initialize_storage()
+
+    def get_credentials(self) -> Optional[Credentials]:
+        credentials = self._storage.get()
+        if not credentials or credentials.invalid or credentials.access_token_expired():
+            self._get_new_credentials()
+        return credentials
+
+    def revoke_credentials(self) -> None:
+        pass
+
+    def _initialize_storage(self) -> CredentialsStorage:
+        home = str(Path.home())
+        filename = f'{self._client_id}.{self._CREDENTIALS_FILENAME}'
+        filepath = os.path.join(home, self._CREDENTIALS_FOLDER, filename)
+        return CredentialsStorage(filepath)
+
+    def _get_new_credentials(self) -> None:
+        return None
