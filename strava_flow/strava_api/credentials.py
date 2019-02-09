@@ -4,21 +4,21 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional
 
-from strava_flow.utils.time import timestamp_from_datetime, datetime_from_timestamp
+from strava_flow.utils.time import datetime_from_timestamp
 
 
 class StravaCredentials:
-
-    def __init__(self,
-                 client_id: str,
-                 client_secret: str,
-                 access_token: str,
-                 refresh_token: str,
-                 token_expiry: float,
-                 scope: str,
-                 user_agent: str,
-                 invalid: bool = False
-                 ) -> None:
+    def __init__(
+        self,
+        client_id: str,
+        client_secret: str,
+        access_token: str,
+        refresh_token: str,
+        token_expiry: float,
+        scope: str,
+        user_agent: str,
+        invalid: bool = False,
+    ) -> None:
         self.client_id = client_id
         self.client_secret = client_secret
         self.access_token = access_token
@@ -43,14 +43,16 @@ class StravaCredentials:
     @classmethod
     def from_json(cls, content: str) -> 'StravaCredentials':
         data = json.loads(content)
-        return cls(client_id=data['client_id'],
-                   client_secret=data['client_secret'],
-                   access_token=data['access_token'],
-                   refresh_token=data['refresh_token'],
-                   token_expiry=data['token_expiry'],
-                   scope=data['scope'],
-                   user_agent=data['user_agent'],
-                   invalid=data['invalid'])
+        return cls(
+            client_id=data['client_id'],
+            client_secret=data['client_secret'],
+            access_token=data['access_token'],
+            refresh_token=data['refresh_token'],
+            token_expiry=data['token_expiry'],
+            scope=data['scope'],
+            user_agent=data['user_agent'],
+            invalid=data['invalid'],
+        )
 
     def to_json(self) -> str:
         data = {
@@ -61,13 +63,12 @@ class StravaCredentials:
             'token_expiry': self.token_expiry,
             'scope': self.scope,
             'user_agent': self.user_agent,
-            'invalid': self.invalid
+            'invalid': self.invalid,
         }
         return json.dumps(data, indent=2)
 
 
 class CredentialsStorage:
-
     def __init__(self, filename: str) -> None:
         self._filename = filename
 
