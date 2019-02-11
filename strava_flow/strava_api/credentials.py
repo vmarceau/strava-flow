@@ -2,15 +2,16 @@ import os
 import json
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 
 from strava_flow.utils.time import datetime_from_timestamp
+from strava_flow.strava_api.oauth2 import OAuth2AuthenticationClient
 
 
 class Credentials:
     def __init__(
         self,
-        client_id: str,
+        client_id: int,
         client_secret: str,
         access_token: str,
         refresh_token: str,
@@ -94,15 +95,15 @@ class CredentialsStorage:
 
 
 class StravaCredentialsService:
-    _SCOPES = ['activities:read']
+    _SCOPES = ['activity:read']
     _AUTHORIZE_URI = 'https://www.strava.com/oauth/authorize'
-    _DEAUTHORIZE_URI = 'https://www.strava.com/oauth/deauthorize'
+    _REVOKE_URI = 'https://www.strava.com/oauth/deauthorize'
     _TOKEN_URI = 'https://www.strava.com/oauth/token'
     _USER_AGENT = 'strava-flow'
     _CREDENTIALS_FOLDER = '.credentials'
     _CREDENTIALS_FILENAME = 'strava.com.json'
 
-    def __init__(self, cliend_id: str, client_secret: str) -> None:
+    def __init__(self, cliend_id: int, client_secret: str) -> None:
         self._client_id = cliend_id
         self._client_secret = client_secret
         self._storage = self._initialize_storage()
@@ -110,11 +111,13 @@ class StravaCredentialsService:
     def get_credentials(self) -> Optional[Credentials]:
         credentials = self._storage.get()
         if not credentials or credentials.invalid or credentials.access_token_expired():
-            self._get_new_credentials()
+            credentials = self._get_new_credentials()
+        self._storage.put(credentials)
         return credentials
 
-    def revoke_credentials(self) -> None:
-        pass
+    def refresh_credentials(self) -> None:
+        # @todo implement
+        raise NotImplementedError
 
     def _initialize_storage(self) -> CredentialsStorage:
         home = str(Path.home())
@@ -122,5 +125,39 @@ class StravaCredentialsService:
         filepath = os.path.join(home, self._CREDENTIALS_FOLDER, filename)
         return CredentialsStorage(filepath)
 
-    def _get_new_credentials(self) -> None:
-        return None
+    def _get_new_credentials(self) -> Credentials:
+        client = OAuth2AuthenticationClient(
+            client_id=self._client_id,
+            client_secret=self._client_secret,
+            scopes=self._SCOPES,
+            user_agent=self._USER_AGENT,
+            auth_uri=self._AUTHORIZE_URI,
+            token_uri=self._TOKEN_URI,
+            revoke_uri=self._REVOKE_URI,
+        )
+        token = client.authenticate()
+        # @todo validate token content
+        return self._convert_token_to_credentials(token)
+
+    def _convert_token_to_credentials(self, token_dict: Dict[str, Any]) -> Credentials:
+        return Credentials(
+            client_id=self._client_id,
+            client_secret=self._client_secret,
+            access_token=token_dict['access_token'],
+            refresh_token=token_dict['refresh_token'],
+            token_expiry=token_dict['token_expiry'],
+            scopes=self._SCOPES,
+            user_agent=self._USER_AGENT,
+        )
+
+
+if __name__ == '__main__':
+    from strava_flow.configuration.config import load_config
+
+    os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
+
+    config = load_config()
+    credentials_service = StravaCredentialsService(
+        cliend_id=config['strava_client_id'], client_secret=config['strava_client_secret']
+    )
+    credentials = credentials_service.get_credentials()
