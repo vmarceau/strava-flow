@@ -15,6 +15,14 @@ class InvalidTokenException(Exception):
 
 
 class Credentials:
+    CLIENT_ID = 'client_id'
+    CLIENT_SECRET = 'client_secret'
+    ACCESS_TOKEN = 'access_token'
+    REFRESH_TOKEN = 'refresh_token'
+    TOKEN_EXPIRY = 'token_expiry'
+    SCOPE = 'scope'
+    USER_AGENT = 'user_agent'
+    INVALID = 'invalid'
     _EXPIRES_SOON_OFFSET = 3600.0
 
     def __init__(
@@ -24,7 +32,7 @@ class Credentials:
         access_token: str,
         refresh_token: str,
         token_expiry: float,
-        scopes: List[str],
+        scope: List[str],
         user_agent: str,
         invalid: bool = False,
     ) -> None:
@@ -34,7 +42,7 @@ class Credentials:
         self.refresh_token = refresh_token
         self.token_expiry = token_expiry
         self.user_agent = user_agent
-        self.scopes = scopes
+        self.scope = scope
         self.invalid = invalid
 
     def invalidate(self) -> None:
@@ -59,26 +67,26 @@ class Credentials:
     def from_json(cls, content: str) -> 'Credentials':
         data = json.loads(content)
         return cls(
-            client_id=data['client_id'],
-            client_secret=data['client_secret'],
-            access_token=data['access_token'],
-            refresh_token=data['refresh_token'],
-            token_expiry=data['token_expiry'],
-            scopes=data['scope'],
-            user_agent=data['user_agent'],
-            invalid=data['invalid'],
+            client_id=data[cls.CLIENT_ID],
+            client_secret=data[cls.CLIENT_SECRET],
+            access_token=data[cls.ACCESS_TOKEN],
+            refresh_token=data[cls.REFRESH_TOKEN],
+            token_expiry=data[cls.TOKEN_EXPIRY],
+            scope=data[cls.SCOPE],
+            user_agent=data[cls.USER_AGENT],
+            invalid=data[cls.INVALID],
         )
 
     def to_json(self) -> str:
         data = {
-            'client_id': self.client_id,
-            'client_secret': self.client_secret,
-            'access_token': self.access_token,
-            'refresh_token': self.refresh_token,
-            'token_expiry': self.token_expiry,
-            'scope': self.scopes,
-            'user_agent': self.user_agent,
-            'invalid': self.invalid,
+            self.CLIENT_ID: self.client_id,
+            self.CLIENT_SECRET: self.client_secret,
+            self.ACCESS_TOKEN: self.access_token,
+            self.REFRESH_TOKEN: self.refresh_token,
+            self.TOKEN_EXPIRY: self.token_expiry,
+            self.SCOPE: self.scope,
+            self.USER_AGENT: self.user_agent,
+            self.INVALID: self.invalid,
         }
         return json.dumps(data, indent=2)
 
@@ -111,7 +119,7 @@ class CredentialsStorage:
 
 
 class StravaCredentialsService:
-    _SCOPES = ['activity:read']
+    _SCOPE = ['activity:read']
     _AUTHORIZE_URI = 'https://www.strava.com/oauth/authorize'
     _REVOKE_URI = 'https://www.strava.com/oauth/deauthorize'
     _TOKEN_URI = 'https://www.strava.com/oauth/token'
@@ -127,7 +135,7 @@ class StravaCredentialsService:
         self._auth_client = OAuth2AuthenticationClient(
             client_id=self._client_id,
             client_secret=self._client_secret,
-            scopes=self._SCOPES,
+            scope=self._SCOPE,
             user_agent=self._USER_AGENT,
             auth_uri=self._AUTHORIZE_URI,
             token_uri=self._TOKEN_URI,
@@ -169,10 +177,10 @@ class StravaCredentialsService:
             return Credentials(
                 client_id=self._client_id,
                 client_secret=self._client_secret,
-                access_token=token_dict['access_token'],
-                refresh_token=token_dict['refresh_token'],
-                token_expiry=token_dict['token_expiry'],
-                scopes=self._SCOPES,
+                access_token=token_dict[Credentials.ACCESS_TOKEN],
+                refresh_token=token_dict[Credentials.REFRESH_TOKEN],
+                token_expiry=token_dict[Credentials.TOKEN_EXPIRY],
+                scope=self._SCOPE,
                 user_agent=self._USER_AGENT,
             )
         else:
@@ -180,7 +188,9 @@ class StravaCredentialsService:
 
     @staticmethod
     def _is_token_valid(token_dict: Dict[str, Any]) -> bool:
-        return all(key in token_dict for key in ['access_token', 'refresh_token', 'token_expiry'])
+        return all(
+            key in token_dict for key in [Credentials.ACCESS_TOKEN, Credentials.REFRESH_TOKEN, Credentials.TOKEN_EXPIRY]
+        )
 
 
 if __name__ == '__main__':

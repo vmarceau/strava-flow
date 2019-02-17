@@ -38,7 +38,7 @@ class OAuth2AuthenticationClient:
         self,
         client_id: int,
         client_secret: str,
-        scopes: List[str],
+        scope: List[str],
         user_agent: str,
         auth_uri: str,
         token_uri: str,
@@ -46,7 +46,7 @@ class OAuth2AuthenticationClient:
     ) -> None:
         self._client_id = client_id
         self._client_secret = client_secret
-        self._scopes = scopes
+        self._scope = scope
         self._user_agent = user_agent
         self._auth_uri = auth_uri
         self._token_uri = token_uri
@@ -65,7 +65,7 @@ class OAuth2AuthenticationClient:
         return token
 
     def refresh(self, refresh_token: str) -> Dict[str, Any]:
-        strava = OAuth2Session(self._client_id, scope=self._scopes, redirect_uri=self._redirect_uri)
+        strava = OAuth2Session(self._client_id, scope=self._scope, redirect_uri=self._redirect_uri)
         new_token: Dict[str, Any] = strava.refresh_token(
             self._token_uri, client_id=self._client_id, client_secret=self._client_secret, refresh_token=refresh_token
         )
@@ -76,12 +76,12 @@ class OAuth2AuthenticationClient:
         }
 
     def _get_authorization_url(self) -> Tuple[str, str]:
-        strava = OAuth2Session(self._client_id, scope=self._scopes, redirect_uri=self._redirect_uri)
+        strava = OAuth2Session(self._client_id, scope=self._scope, redirect_uri=self._redirect_uri)
         authorization_url, state = strava.authorization_url(self._auth_uri)
         return authorization_url, state
 
     def _fetch_token(self, response: str, state: str) -> Dict[str, Any]:
-        strava = OAuth2Session(self._client_id, scope=self._scopes, redirect_uri=self._redirect_uri, state=state)
+        strava = OAuth2Session(self._client_id, scope=self._scope, redirect_uri=self._redirect_uri, state=state)
         token: Dict[str, Any] = strava.fetch_token(
             self._token_uri, client_secret=self._client_secret, authorization_response=response, include_client_id=True
         )
