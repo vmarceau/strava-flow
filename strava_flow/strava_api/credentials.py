@@ -8,10 +8,8 @@ from strava_flow.utils.time import datetime_from_timestamp
 from strava_flow.strava_api.oauth2 import OAuth2AuthenticationClient
 
 
-class InvalidTokenException(Exception):
+class InvalidTokenFormatException(Exception):
     """Received token does not contain the valid format"""
-
-    pass
 
 
 class Credentials:
@@ -102,7 +100,7 @@ class CredentialsStorage:
                 with open(self._filepath, 'r') as f:
                     content = f.read()
                 credentials = Credentials.from_json(content)
-            except Exception:
+            except IOError:
                 pass
 
         return credentials
@@ -142,16 +140,13 @@ class StravaCredentialsService:
             revoke_uri=self._REVOKE_URI,
         )
 
-    def get_credentials(self) -> Optional[Credentials]:
+    def get_access_token(self) -> str:
+        credentials = self._get_credentials()
+        return credentials.access_token
+
+    def _get_credentials(self) -> Credentials:
         credentials = self._storage.get()
         if not credentials or credentials.invalid or credentials.access_token_expired():
-            credentials = self._get_new_credentials()
-        self._storage.put(credentials)
-        return credentials
-
-    def refresh_credentials(self) -> Optional[Credentials]:
-        credentials = self._storage.get()
-        if not credentials or credentials.invalid:
             credentials = self._get_new_credentials()
         elif credentials.access_token_soon_expired():
             credentials = self._refresh_existing_credentials(credentials)
@@ -184,7 +179,7 @@ class StravaCredentialsService:
                 user_agent=self._USER_AGENT,
             )
         else:
-            raise InvalidTokenException
+            raise InvalidTokenFormatException
 
     @staticmethod
     def _is_token_valid(token_dict: Dict[str, Any]) -> bool:
@@ -202,4 +197,5 @@ if __name__ == '__main__':
     credentials_service = StravaCredentialsService(
         cliend_id=config['strava_client_id'], client_secret=config['strava_client_secret']
     )
-    credentials = credentials_service.get_credentials()
+    access_token = credentials_service.get_access_token()
+    print(access_token)
