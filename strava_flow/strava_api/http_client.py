@@ -5,7 +5,7 @@ from strava_flow.strava_api.credentials import StravaCredentialsService
 
 
 class StravaHttpClient:
-    _URL = 'https://www.strava.com/api/v3'
+    _URL = 'https://www.strava.com/api'
     _GET = 'get'
     _POST = 'post'
     _PUT = 'put'
@@ -17,19 +17,19 @@ class StravaHttpClient:
     def __del__(self) -> None:
         self._session.close()
 
-    def get(self, url: str, **kwargs: Any) -> Any:
+    def get(self, url: str, **kwargs: Any) -> Dict[str, Any]:
         return self._request(self._GET, url, **kwargs)
 
-    def post(self, url: str, **kwargs: Any) -> Any:
+    def post(self, url: str, **kwargs: Any) -> Dict[str, Any]:
         return self._request(self._POST, url, **kwargs)
 
-    def put(self, url: str, **kwargs: Any) -> Any:
+    def put(self, url: str, **kwargs: Any) -> Dict[str, Any]:
         return self._request(self._PUT, url, **kwargs)
 
     def _request(self, method: str, url: str, **kwargs: Any) -> Dict[str, Any]:
-        params = self._prepare_params(kwargs)
+        kwargs = self._prepare_params(kwargs)
         request_method = getattr(self._session, method)
-        response: requests.Response = request_method(self._URL + url, params=params)
+        response: requests.Response = request_method(self._URL + url, params=kwargs['params'])
         response.raise_for_status()
         return self._format_response(response)
 

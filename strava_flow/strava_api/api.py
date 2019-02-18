@@ -23,3 +23,17 @@ class StravaApi:
         client_id = config['strava_client_id']
         client_secret = config['strava_client_secret']
         return StravaCredentialsService(cliend_id=client_id, client_secret=client_secret)
+
+
+if __name__ == '__main__':
+    import os
+    import json
+    from strava_flow.configuration.config import load_config
+
+    os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
+
+    config = load_config()
+    api = StravaApi(config)
+
+    res = api.activities.get_activity('2150404083')
+    print(json.dumps(res, indent=2))

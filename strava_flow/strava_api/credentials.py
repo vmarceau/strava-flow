@@ -117,7 +117,7 @@ class CredentialsStorage:
 
 
 class StravaCredentialsService:
-    _SCOPE = ['activity:read']
+    _SCOPE = ['activity:read_all']
     _AUTHORIZE_URI = 'https://www.strava.com/oauth/authorize'
     _REVOKE_URI = 'https://www.strava.com/oauth/deauthorize'
     _TOKEN_URI = 'https://www.strava.com/oauth/token'
@@ -146,7 +146,7 @@ class StravaCredentialsService:
 
     def _get_credentials(self) -> Credentials:
         credentials = self._storage.get()
-        if not credentials or credentials.invalid or credentials.access_token_expired():
+        if not credentials or credentials.invalid:
             credentials = self._get_new_credentials()
         elif credentials.access_token_soon_expired():
             credentials = self._refresh_existing_credentials(credentials)
@@ -186,16 +186,3 @@ class StravaCredentialsService:
         return all(
             key in token_dict for key in [Credentials.ACCESS_TOKEN, Credentials.REFRESH_TOKEN, Credentials.TOKEN_EXPIRY]
         )
-
-
-if __name__ == '__main__':
-    from strava_flow.configuration.config import load_config
-
-    os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
-
-    config = load_config()
-    credentials_service = StravaCredentialsService(
-        cliend_id=config['strava_client_id'], client_secret=config['strava_client_secret']
-    )
-    access_token = credentials_service.get_access_token()
-    print(access_token)
