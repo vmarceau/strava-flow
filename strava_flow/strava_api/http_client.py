@@ -17,16 +17,16 @@ class StravaHttpClient:
     def __del__(self) -> None:
         self._session.close()
 
-    def get(self, url: str, **kwargs: Any) -> Dict[str, Any]:
+    def get(self, url: str, **kwargs: Any) -> Any:
         return self._request(self._GET, url, **kwargs)
 
-    def post(self, url: str, **kwargs: Any) -> Dict[str, Any]:
+    def post(self, url: str, **kwargs: Any) -> Any:
         return self._request(self._POST, url, **kwargs)
 
-    def put(self, url: str, **kwargs: Any) -> Dict[str, Any]:
+    def put(self, url: str, **kwargs: Any) -> Any:
         return self._request(self._PUT, url, **kwargs)
 
-    def _request(self, method: str, url: str, **kwargs: Any) -> Dict[str, Any]:
+    def _request(self, method: str, url: str, **kwargs: Any) -> Any:
         kwargs = self._prepare_params(kwargs)
         request_method = getattr(self._session, method)
         response: requests.Response = request_method(self._URL + url, params=kwargs['params'])
@@ -41,7 +41,7 @@ class StravaHttpClient:
         return kwargs
 
     @staticmethod
-    def _format_response(response: requests.Response) -> Dict[str, Any]:
+    def _format_response(response: requests.Response) -> Any:
         if response.status_code == requests.codes.no_content:
             return {}
         else:
