@@ -22,8 +22,7 @@ class StravaActivitiesApi(StravaBaseApi):
     ) -> Any:
         url = '/v3/activities'
         params = {'before': before, 'after': after, 'per_page': per_page, 'page': page}
-        if per_page is None and page is None:
-            # @todo: imlement http client method to iterate on all pages
-            raise NotImplementedError
+        if page is None:
+            return self._http_client.get_all(url=url, params=params)
         else:
             return self._http_client.get(url=url, params=params)

@@ -37,4 +37,5 @@ if __name__ == '__main__':
 
     # res = api.activities.get_activity(2150404083)
     res = api.activities.get_all_activities()
-    print(json.dumps(res, indent=2))
+    res_json = json.dumps(res, indent=2)
+    print(res_json)

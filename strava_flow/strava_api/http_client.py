@@ -1,11 +1,12 @@
 import requests
-from typing import Any, Dict
+from typing import Any, Dict, List
 
 from strava_flow.strava_api.credentials import StravaCredentialsService
 
 
 class StravaHttpClient:
     _URL = 'https://www.strava.com/api'
+    _PER_PAGE_DEFAULT = 30
     _GET = 'get'
     _POST = 'post'
     _PUT = 'put'
@@ -19,6 +20,22 @@ class StravaHttpClient:
 
     def get(self, url: str, **kwargs: Any) -> Any:
         return self._request(self._GET, url, **kwargs)
+
+    def get_all(self, url: str, **kwargs: Any) -> List[Any]:
+        if kwargs['params'].get('per_page') is None:
+            kwargs['params']['per_page'] = self._PER_PAGE_DEFAULT
+
+        fetch_more = True
+        current_page = 1
+        results: List[Any] = []
+        while fetch_more:
+            kwargs['params']['page'] = current_page
+            page_results = self._request(self._GET, url, **kwargs)
+            results += page_results
+            current_page += 1
+            if len(page_results) < kwargs['params']['per_page']:
+                fetch_more = False
+        return results
 
     def post(self, url: str, **kwargs: Any) -> Any:
         return self._request(self._POST, url, **kwargs)
