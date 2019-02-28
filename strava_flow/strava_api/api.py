@@ -12,10 +12,6 @@ class StravaApi:
         self._activities_api = StravaActivitiesApi(self._http_client)
 
     @property
-    def http_client(self) -> StravaHttpClient:
-        return self._http_client
-
-    @property
     def activities(self) -> StravaActivitiesApi:
         return self._activities_api
 
