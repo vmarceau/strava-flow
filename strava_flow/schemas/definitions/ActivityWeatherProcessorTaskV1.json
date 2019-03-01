@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "ActivityWeatherProcessorTaskV1",
+  "description": "A schema for activity weather processing task",
+  "type": "object",
+  "properties": {
+    "id": {
+      "description": "The id of the task",
+      "type": "string"
+    },
+    "athlete_id": {
+      "description": "The id of the athlete",
+      "type": "string"
+    },
+    "activity_id": {
+      "description": "The id of the activity",
+      "type": "string"
+    },
+    "activity_timestamp": {
+      "description": "The timestamp of the activity",
+      "type": "number"
+    },
+    "activity_latitude": {
+      "description": "The latitude of the activity",
+      "type": "number"
+    },
+    "activity_longitude": {
+      "description": "The longitude of the activity",
+      "type": "number"
+    },
+  },
+  "required": [
+    "id",
+    "athlete_id",
+    "activity_id",
+    "activity_timestamp",
+    "activity_latitude",
+    "activity_longitude"
+  ]
+}

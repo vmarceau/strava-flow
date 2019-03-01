@@ -1,4 +1,6 @@
 PyYAML
 numpy
+requests
 requests_oauthlib
+jsonschema
 mypy
