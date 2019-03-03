@@ -1,6 +1,6 @@
 from typing import Any, Optional, List
 
-from strava_flow.darksky_api.http_client import DarkskyHttpClient
+from strava_flow.api.darksky.http_client import DarkskyHttpClient
 
 
 class DarkskyApi:

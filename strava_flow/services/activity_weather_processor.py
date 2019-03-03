@@ -1,6 +1,6 @@
 from typing import Dict, Any
 
-from strava_flow.darksky_api.api import DarkskyApi
+from strava_flow.api.darksky.api import DarkskyApi
 from strava_flow.schemas.validator import SchemaValidator
 
 

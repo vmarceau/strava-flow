@@ -1,7 +1,7 @@
 from typing import Any, Optional
 
-from strava_flow.strava_api.apis.abc import StravaBaseApi
-from strava_flow.strava_api.http_client import StravaHttpClient
+from strava_flow.api.strava.apis.abc import StravaBaseApi
+from strava_flow.api.strava.http_client import StravaHttpClient
 
 
 class StravaActivitiesApi(StravaBaseApi):

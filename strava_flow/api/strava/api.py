@@ -1,9 +1,9 @@
 from typing import Any, Dict
 
-from strava_flow.strava_api.credentials import StravaCredentialsService
-from strava_flow.strava_api.http_client import StravaHttpClient
-from strava_flow.strava_api.apis.activities_api import StravaActivitiesApi
-from strava_flow.strava_api.apis.athletes_api import StravaAthletesApi
+from strava_flow.api.strava.credentials import StravaCredentialsService
+from strava_flow.api.strava.http_client import StravaHttpClient
+from strava_flow.api.strava.apis.activities_api import StravaActivitiesApi
+from strava_flow.api.strava.apis.athletes_api import StravaAthletesApi
 
 
 class StravaApi:

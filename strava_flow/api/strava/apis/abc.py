@@ -1,6 +1,6 @@
 import abc
 
-from strava_flow.strava_api.http_client import StravaHttpClient
+from strava_flow.api.strava.http_client import StravaHttpClient
 
 
 class StravaBaseApi(metaclass=abc.ABCMeta):  # noqa: B903

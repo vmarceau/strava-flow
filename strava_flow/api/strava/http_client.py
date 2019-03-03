@@ -1,7 +1,7 @@
 import requests
 from typing import Any, Dict, List
 
-from strava_flow.strava_api.credentials import StravaCredentialsService
+from strava_flow.api.strava.credentials import StravaCredentialsService
 
 
 class StravaHttpClient:

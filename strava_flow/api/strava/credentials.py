@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import List, Optional, Dict, Any
 
 from strava_flow.utils.time import datetime_from_timestamp
-from strava_flow.strava_api.oauth2 import OAuth2AuthenticationClient
+from strava_flow.api.strava.oauth2 import OAuth2AuthenticationClient
 
 
 class InvalidTokenFormatException(Exception):
