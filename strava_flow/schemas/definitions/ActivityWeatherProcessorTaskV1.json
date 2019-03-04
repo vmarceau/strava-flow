@@ -17,15 +17,19 @@
       "type": "string"
     },
     "activity_timestamp": {
-      "description": "The timestamp of the activity",
+      "description": "The start timestamp of the activity",
+      "type": "number"
+    },
+    "activity_elapsed_time": {
+      "description": "The total duration of the activity in seconds",
       "type": "number"
     },
     "activity_latitude": {
-      "description": "The latitude of the activity",
+      "description": "The start latitude of the activity",
       "type": "number"
     },
     "activity_longitude": {
-      "description": "The longitude of the activity",
+      "description": "The start longitude of the activity",
       "type": "number"
     },
   },
@@ -34,6 +38,7 @@
     "athlete_id",
     "activity_id",
     "activity_timestamp",
+    "activity_elapsed_time",
     "activity_latitude",
     "activity_longitude"
   ]

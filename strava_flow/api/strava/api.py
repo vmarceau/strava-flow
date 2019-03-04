@@ -38,7 +38,9 @@ if __name__ == '__main__':
     api = StravaApi(config)
 
     # res = api.activities.get_activity(2150404083)
-    # res = api.activities.get_all_activities(page=1)
-    res = api.athletes.get_athlete()
+    res = api.activities.get_all_activities(page=1)
+    # res = api.athletes.get_athlete()
     res_json = json.dumps(res, indent=2)
     print(res_json)
+
+    res[2]

@@ -9,7 +9,7 @@ class InvalidSchemaException(Exception):
 
 
 class SchemaValidator:
-    _SUPPORTED_SCHEMAS = ['ActivityWeatherProcessorTaskV1']
+    _SUPPORTED_SCHEMAS = ['ActivityWeatherProcessorTaskV1.json']
 
     def __init__(self) -> None:
         self._schemas = self._load_schemas()
@@ -24,8 +24,7 @@ class SchemaValidator:
         current_directory = os.path.dirname(current_file)
         schema_directory = os.path.join(current_directory, 'definitions')
         return {
-            name: self._load_schema_from_json(os.path.join(schema_directory, f'{name}.json'))
-            for name in self._SUPPORTED_SCHEMAS
+            name: self._load_schema_from_json(os.path.join(schema_directory, name)) for name in self._SUPPORTED_SCHEMAS
         }
 
     def _create_validators(self) -> Dict[str, Draft4Validator]:
