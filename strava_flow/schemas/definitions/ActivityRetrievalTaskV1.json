@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "ActivityRetrievalTaskV1",
+  "description": "A schema for activity retrieval task",
+  "type": "object",
+  "properties": {
+    "id": {
+      "description": "The id of the task",
+      "type": "string"
+    },
+    "before_timestamp": {
+      "description": "Retrieve only activities before that timestamp",
+      "type": "number"
+    },
+    "after_timestamp": {
+      "description": "Retrieve only activities after that timestamp",
+      "type": "string"
+    },
+    "activity_types": {
+      "description": "Retrieve only activities of the provided types",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "id",
+    "before_timestamp",
+    "after_timestamp",
+    "activity_types"
+  ]
+}
