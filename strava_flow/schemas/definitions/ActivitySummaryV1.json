@@ -1,0 +1,90 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "ActivitySummaryV1",
+  "description": "A schema for activity summary",
+  "type": "object",
+  "properties": {
+    "id": {
+      "description": "The id of the activity",
+      "type": "string"
+    },
+    "athlete_id": {
+      "description": "The id of the athlete",
+      "type": "string"
+    },
+    "name": {
+      "description": "The name of the activity",
+      "type": "string"
+    },
+    "type": {
+      "description": "The type of the activity",
+      "type": "string"
+    },
+    "timestamp": {
+      "description": "The start timestamp of the activity (utc)",
+      "type": "number"
+    },
+    "timezone": {
+      "description": "Timezone of the activity",
+      "type": "string"
+    },
+    "moving_time": {
+      "description": "The moving duration of the activity in seconds",
+      "type": "number"
+    },
+    "elapsed_time": {
+      "description": "The total duration of the activity in seconds",
+      "type": "number"
+    },
+    "distance": {
+      "description": "Total distance in meters",
+      "type": "number"
+    },
+    "elevation_gain": {
+      "description": "Total elevation gain in meters",
+      "type": "number"
+    },
+    "elevation_high": {
+      "description": "Highest elevation point in meters",
+      "type": "number"
+    },
+    "elevation_low": {
+      "description": "Lowest elevation point in meters",
+      "type": "number"
+    },
+    "latitude_start": {
+      "description": "The start latitude of the activity",
+      "type": "number"
+    },
+    "longitude_start": {
+      "description": "The start longitude of the activity",
+      "type": "number"
+    },
+    "latitude_end": {
+      "description": "The end latitude of the activity",
+      "type": "number"
+    },
+    "longitude_end": {
+      "description": "The end longitude of the activity",
+      "type": "number"
+    }
+  },
+  "required": [
+    "id",
+    "athlete_id",
+    "name",
+    "type",
+    "timestamp",
+    "timezone",
+    "moving_time",
+    "elapsed_time",
+    "distance",
+    "elevation_gain",
+    "elevation_high",
+    "elevation_low",
+    "latitude_start",
+    "longitude_start",
+    "latitude_end",
+    "longitude_end"
+  ]
+}

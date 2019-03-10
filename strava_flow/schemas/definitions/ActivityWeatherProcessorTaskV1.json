@@ -8,10 +8,6 @@
       "description": "The id of the task",
       "type": "string"
     },
-    "athlete_id": {
-      "description": "The id of the athlete",
-      "type": "string"
-    },
     "activity_id": {
       "description": "The id of the activity",
       "type": "string"
@@ -35,7 +31,6 @@
   },
   "required": [
     "id",
-    "athlete_id",
     "activity_id",
     "activity_timestamp",
     "activity_elapsed_time",
