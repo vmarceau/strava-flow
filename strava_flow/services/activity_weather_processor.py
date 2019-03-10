@@ -1,4 +1,3 @@
-import uuid
 import logging
 from typing import Dict, Any
 
@@ -52,11 +51,11 @@ class ActivityWeatherProcessor:
         return is_valid
 
     def _format_output_data(self, data: Dict[str, Any], weather_data: Dict[str, Any]) -> Dict[str, Any]:
-        output = {'id': uuid.uuid1(), 'activity_id': data['activity_id']}
+        output = {'id': data['id'], 'activity_id': data['activity_id']}
         if weather_data:
-            output['latitude'] = weather_data['latitude']
-            output['longitude'] = weather_data['longitude']
-            output['retrieval_time'] = weather_data['currently']['time']
+            output['retrieval_latitude'] = weather_data['latitude']
+            output['retrieval_longitude'] = weather_data['longitude']
+            output['retrieval_timestamp'] = weather_data['currently']['time']
             output['weather_summary'] = weather_data['currently']['summary']
             output['temperature'] = weather_data['currently']['temperature']
             output['temperature_apparent'] = weather_data['currently']['apparentTemperature']
@@ -68,6 +67,6 @@ class ActivityWeatherProcessor:
         return output
 
     def _create_response(self, data: Dict[str, Any]) -> Dict[str, Any]:
-        response: Dict[str, Any] = {'schema': 'ActivityWeatherProcessorTaskV1.json', 'data': data}
+        response: Dict[str, Any] = {'schema': 'ActivityWeatherProcessorResultV1.json', 'data': data}
         self._schema_validator.validate(response['schema'], response['data'])
         return response

@@ -1,0 +1,75 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "ActivityWeatherProcessorResultV1",
+  "description": "A schema for activity weather processing results",
+  "type": "object",
+  "properties": {
+    "id": {
+      "description": "The id of the processing task",
+      "type": "string"
+    },
+    "activity_id": {
+      "description": "The id of the activity",
+      "type": "string"
+    },
+    "retrieval_latitude": {
+      "description": "Weather retrieval latitude",
+      "type": "number"
+    },
+    "retrieval_longitude": {
+      "description": "Weather retrieval longitude",
+      "type": "number"
+    },
+    "retrieval_timestamp": {
+      "description": "Weather retrieval timestamp",
+      "type": "number"
+    },
+    "weather_summary": {
+      "description": "Summary of the weather conditions",
+      "type": "string"
+    },
+    "temperature": {
+      "description": "Real temperature",
+      "type": "number"
+    },
+    "temperature_apparent": {
+      "description": "Apparent temperature",
+      "type": "number"
+    },
+    "precipitations_intensity": {
+      "description": "Precipitations intensity",
+      "type": "number"
+    },
+    "precipitations_probability": {
+      "description": "Precipitations probability",
+      "type": "number"
+    },
+    "precipitations_type": {
+      "description": "Precipitations type",
+      "type": "number"
+    },
+    "humidity": {
+      "description": "Humidity percentage",
+      "type": "number"
+    },
+    "wind_speed": {
+      "description": "Wind speed",
+      "type": "number"
+    }
+  },
+  "required": [
+    "id",
+    "activity_id",
+    "retrieval_latitude",
+    "retrieval_longitude",
+    "retrieval_timestamp",
+    "weather_summary",
+    "temperature",
+    "temperature_apparent",
+    "precipitations_intensity",
+    "precipitations_probability",
+    "precipitations_type",
+    "humidity",
+    "wind_speed"
+  ]
+}
