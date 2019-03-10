@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "ActivityRetrievalTResultV1",
+  "description": "A schema for activity retrieval result",
+  "type": "object",
+  "properties": {
+    "id": {
+      "description": "The id of the task",
+      "type": "string"
+    },
+    "activities": {
+      "description": "Retrieved activities",
+      "type": "array",
+      "items": {
+        "$ref": "./ActivitySummaryV1.json"
+      }
+    }
+  },
+  "required": [
+    "id",
+    "activities"
+  ]
+}

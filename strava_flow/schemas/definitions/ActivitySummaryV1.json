@@ -1,7 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "ActivitySummaryV1",
-  "description": "A schema for activity summary",
+  "description": "Activity summary object",
   "type": "object",
   "properties": {
     "id": {

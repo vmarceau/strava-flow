@@ -1,7 +1,7 @@
 import os
 import json
 from typing import Dict, Any
-from jsonschema import Draft4Validator  # type: ignore
+from jsonschema import Draft4Validator, RefResolver  # type: ignore
 
 
 class InvalidSchemaException(Exception):
@@ -13,6 +13,7 @@ class SchemaValidator:
 
     def __init__(self) -> None:
         self._schemas = self._load_schemas()
+        self._resolver = self._get_resolver()
         self._validators = self._create_validators()
 
     def validate(self, schema: str, data: Dict[str, Any]) -> None:
@@ -27,8 +28,13 @@ class SchemaValidator:
             name: self._load_schema_from_json(os.path.join(schema_directory, name)) for name in self._SUPPORTED_SCHEMAS
         }
 
+    def _get_resolver(self) -> RefResolver:
+        current_path = os.path.dirname(os.path.realpath(__file__))
+        definitions_path = os.path.join(current_path, 'definitions')
+        return RefResolver(f'file://{definitions_path}', None)
+
     def _create_validators(self) -> Dict[str, Draft4Validator]:
-        return {name: Draft4Validator(schema) for name, schema in self._schemas.items()}
+        return {name: Draft4Validator(schema, resolver=self._resolver) for name, schema in self._schemas.items()}
 
     def _get_validator(self, schema: str) -> Draft4Validator:
         if schema in self._validators:
